@@ -41,8 +41,17 @@ impl SequenceDetector for PortSequenceDetector {
             return;
         }
 
-        let client_sequence = self.client_sequences.entry(client_ip).or_insert(Vec::new());
+        println!(
+            "SYN packet detected from: {} to target port: {}",
+            client_ip, sequence
+        );
+
+        let client_sequence = self
+            .client_sequences
+            .entry(client_ip.clone())
+            .or_insert(Vec::new());
         client_sequence.push(sequence);
+        self.match_sequence(&client_ip);
     }
 
     fn match_sequence(&mut self, client_ip: &str) -> bool {
@@ -51,7 +60,7 @@ impl SequenceDetector for PortSequenceDetector {
         if let Some(sequence) = client_sequence {
             for rule in &self.sequence_rules {
                 if sequence.ends_with(rule) {
-                    println!("Matched sequence: {:?}", rule);
+                    println!("Matched knock sequence: {:?} from: {}", rule, client_ip);
                     // clear the sequence
                     sequence.clear();
                     return true;

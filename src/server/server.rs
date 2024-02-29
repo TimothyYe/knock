@@ -7,18 +7,22 @@ use pnet::packet::ip::IpNextHeaderProtocols;
 use pnet::packet::tcp::TcpPacket;
 use pnet::packet::Packet;
 
+use crate::sequence::SequenceDetector;
+
 pub struct Server {
     interface_name: String,
+    detector: Box<dyn SequenceDetector>,
 }
 
 impl Server {
-    pub fn new(interface: String) -> Server {
-        Server {
+    pub fn new(interface: String, detector: Box<dyn SequenceDetector>) -> Box<Server> {
+        Box::new(Server {
             interface_name: interface,
-        }
+            detector,
+        })
     }
 
-    pub fn start(&self) {
+    pub fn start(&mut self) {
         let interface = datalink::interfaces()
             .into_iter()
             .find(|iface: &NetworkInterface| iface.name == self.interface_name)
@@ -29,7 +33,7 @@ impl Server {
             Ok(Ethernet(tx, rx)) => (tx, rx),
             Ok(_) => panic!("Unhandled channel type"),
             Err(e) => panic!(
-                "An error occurred when creating the datalink channel: {}",
+                "An error occurred when creating the data link channel: {}",
                 e
             ),
         };
@@ -50,10 +54,9 @@ impl Server {
                                             && tcp.get_flags() & pnet::packet::tcp::TcpFlags::ACK
                                                 == 0
                                         {
-                                            println!(
-                                                "SYN packet detected from: {} to target port: {:?}",
+                                            self.detector.add_sequence(
                                                 header.get_source().to_string(),
-                                                tcp.get_destination()
+                                                tcp.get_destination() as i32,
                                             );
                                         }
                                     }

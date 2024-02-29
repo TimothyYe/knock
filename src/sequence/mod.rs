@@ -1,3 +1,5 @@
+pub use port_sequence::PortSequenceDetector;
+
 mod port_sequence;
 
 pub trait SequenceDetector {
