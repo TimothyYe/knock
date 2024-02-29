@@ -1,4 +1,6 @@
 mod server;
+mod config;
+
 use server::Server;
 
 fn main() {

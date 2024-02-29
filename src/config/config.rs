@@ -4,14 +4,14 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Rule {
-    name: String,
-    sequence: Vec<i32>,
-    timeout: i32,
-    command: String,
+    pub name: String,
+    pub sequence: Vec<i32>,
+    pub timeout: i32,
+    pub command: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
-    interface: String,
-    rules: Vec<Rule>,
+    pub interface: String,
+    pub rules: Vec<Rule>,
 }
