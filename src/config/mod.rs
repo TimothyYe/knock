@@ -4,7 +4,7 @@ use config::Config;
 use std::fs::File;
 use std::io::Read;
 
-fn load_config() -> Result<Config, Box<dyn std::error::Error>> {
+pub fn load_config() -> Result<Config, Box<dyn std::error::Error>> {
     let mut file = File::open("config.yaml")?;
     let mut content = String::new();
 
