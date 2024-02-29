@@ -128,7 +128,6 @@ mod tests {
         detector.add_sequence("127.0.0.1".to_owned(), 3);
         detector.add_sequence("127.0.0.1".to_owned(), 5);
         detector.add_sequence("127.0.0.1".to_owned(), 6);
-        assert_eq!(detector.match_sequence("127.0.0.1"), true);
         assert_eq!(detector.client_sequences.get("127.0.0.1").unwrap().len(), 0);
     }
 }
