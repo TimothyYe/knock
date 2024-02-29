@@ -1,11 +1,13 @@
-mod config;
-
-use config::Config;
 use std::fs::File;
 use std::io::Read;
 
-pub fn load_config() -> Result<Config, Box<dyn std::error::Error>> {
-    let mut file = File::open("config.yaml")?;
+pub use config::Config;
+pub use config::Rule;
+
+mod config;
+
+pub fn load_config(path: &str) -> Result<Config, Box<dyn std::error::Error>> {
+    let mut file = File::open(path)?;
     let mut content = String::new();
 
     file.read_to_string(&mut content)?;
@@ -21,7 +23,7 @@ mod tests {
 
     #[test]
     fn test_load_config() {
-        let config = load_config().unwrap();
+        let config = load_config("config.yaml").unwrap();
         assert_eq!(config.interface, "enp3s0");
         assert_eq!(config.rules.len(), 2);
     }

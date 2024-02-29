@@ -2,7 +2,7 @@ extern crate serde;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Rule {
     pub name: String,
     pub sequence: Vec<i32>,
