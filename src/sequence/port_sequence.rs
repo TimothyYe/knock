@@ -92,6 +92,7 @@ mod tests {
         let detector = PortSequenceDetector::new(config);
         assert_eq!(detector.sequence_set.len(), 5);
         assert_eq!(detector.sequence_rules.len(), 2);
+        assert_eq!(detector.timeout, 5);
     }
 
     #[test]
