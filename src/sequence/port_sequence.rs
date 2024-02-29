@@ -5,6 +5,7 @@ use crate::sequence::SequenceDetector;
 
 #[derive(Debug)]
 pub struct PortSequenceDetector {
+    timeout: i32,
     sequence_set: HashSet<i32>,
     sequence_rules: Vec<Vec<i32>>,
     client_sequences: HashMap<String, Vec<i32>>,
@@ -25,6 +26,7 @@ impl PortSequenceDetector {
         }
 
         PortSequenceDetector {
+            timeout: config.timeout,
             sequence_set,
             sequence_rules,
             client_sequences: HashMap::new(),
@@ -43,13 +45,15 @@ impl SequenceDetector for PortSequenceDetector {
         client_sequence.push(sequence);
     }
 
-    fn match_sequence(&self, client_ip: &str) -> bool {
+    fn match_sequence(&mut self, client_ip: &str) -> bool {
         // Check if the current sequence matches any of the rules
-        let client_sequence = self.client_sequences.get(client_ip);
+        let client_sequence = self.client_sequences.get_mut(client_ip);
         if let Some(sequence) = client_sequence {
             for rule in &self.sequence_rules {
                 if sequence.ends_with(rule) {
                     println!("Matched sequence: {:?}", rule);
+                    // clear the sequence
+                    sequence.clear();
                     return true;
                 }
             }
@@ -66,17 +70,16 @@ mod tests {
     fn create_config() -> Config {
         Config {
             interface: "enp3s0".to_string(),
+            timeout: 5,
             rules: vec![
                 crate::config::Rule {
                     name: "enable ssh".to_string(),
                     sequence: vec![1, 2, 3],
-                    timeout: 5,
                     command: "ls -lh".to_string(),
                 },
                 crate::config::Rule {
                     name: "disable ssh".to_string(),
                     sequence: vec![3, 5, 6],
-                    timeout: 5,
                     command: "du -sh *".to_string(),
                 },
             ],
@@ -116,5 +119,6 @@ mod tests {
         detector.add_sequence("127.0.0.1".to_owned(), 5);
         detector.add_sequence("127.0.0.1".to_owned(), 6);
         assert_eq!(detector.match_sequence("127.0.0.1"), true);
+        assert_eq!(detector.client_sequences.get("127.0.0.1").unwrap().len(), 0);
     }
 }

@@ -6,12 +6,12 @@ use serde::{Deserialize, Serialize};
 pub struct Rule {
     pub name: String,
     pub sequence: Vec<i32>,
-    pub timeout: i32,
     pub command: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
     pub interface: String,
+    pub timeout: i32,
     pub rules: Vec<Rule>,
 }
