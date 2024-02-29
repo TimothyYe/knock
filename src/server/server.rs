@@ -8,20 +8,20 @@ use pnet::packet::tcp::TcpPacket;
 use pnet::packet::Packet;
 
 pub struct Server {
-    interface: String,
+    interface_name: String,
 }
 
 impl Server {
     pub fn new(interface: String) -> Server {
         Server {
-            interface: interface,
+            interface_name: interface,
         }
     }
 
     pub fn start(&self) {
         let interface = datalink::interfaces()
             .into_iter()
-            .find(|iface: &NetworkInterface| iface.name == self.interface)
+            .find(|iface: &NetworkInterface| iface.name == self.interface_name)
             .expect("Failed to get interface");
 
         // Create a channel to receive on
@@ -51,8 +51,8 @@ impl Server {
                                                 == 0
                                         {
                                             println!(
-                                                "SYN packet detected from {:?} to {:?}",
-                                                tcp.get_source(),
+                                                "SYN packet detected from: {} to target port: {:?}",
+                                                header.get_source().to_string(),
                                                 tcp.get_destination()
                                             );
                                         }
