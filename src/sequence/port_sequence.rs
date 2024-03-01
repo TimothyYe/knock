@@ -4,7 +4,6 @@ use std::thread;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::config::Config;
-
 use crate::sequence::SequenceDetector;
 
 #[derive(Debug)]
@@ -62,12 +61,11 @@ impl SequenceDetector for PortSequenceDetector {
 
             // get the current time stamp
             let mut client_timeout = self.client_timeout.lock().unwrap();
-            client_timeout.entry(client_ip.clone()).or_insert(
-                SystemTime::now()
-                    .duration_since(UNIX_EPOCH)
-                    .unwrap()
-                    .as_secs(),
-            );
+            let current_time = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_secs();
+            client_timeout.insert(client_ip.clone(), current_time);
         }
 
         self.match_sequence(&client_ip);

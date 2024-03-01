@@ -23,6 +23,9 @@ impl Server {
     }
 
     pub fn start(&mut self) {
+        // Start the sequence detector thread
+        self.detector.start();
+
         let interface = datalink::interfaces()
             .into_iter()
             .find(|iface: &NetworkInterface| iface.name == self.interface_name)
