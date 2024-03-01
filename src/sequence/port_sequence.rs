@@ -4,13 +4,15 @@ use std::thread;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::config::Config;
+use crate::executor;
 use crate::sequence::SequenceDetector;
 
 #[derive(Debug)]
 pub struct PortSequenceDetector {
     timeout: u64,
     sequence_set: HashSet<i32>,
-    sequence_rules: Vec<Vec<i32>>,
+    sequence_rules: HashMap<String, Vec<i32>>,
+    rules_map: HashMap<String, String>,
     client_sequences: Arc<Mutex<HashMap<String, Vec<i32>>>>,
     client_timeout: Arc<Mutex<HashMap<String, u64>>>,
 }
@@ -18,22 +20,28 @@ pub struct PortSequenceDetector {
 impl PortSequenceDetector {
     #[must_use]
     pub fn new(config: Config) -> PortSequenceDetector {
-        let mut sequence_rules = Vec::new();
+        let mut sequence_rules = HashMap::new();
         for rule in config.rules.clone() {
-            sequence_rules.push(rule.sequence);
+            sequence_rules.insert(rule.name, rule.sequence);
         }
 
         let mut sequence_set = HashSet::new();
-        for rule in config.rules {
+        for rule in config.rules.clone() {
             for sequence in rule.sequence {
                 sequence_set.insert(sequence);
             }
+        }
+
+        let mut rules_map = HashMap::new();
+        for rule in config.rules {
+            rules_map.insert(rule.name, rule.command);
         }
 
         PortSequenceDetector {
             timeout: config.timeout,
             sequence_set,
             sequence_rules,
+            rules_map,
             client_sequences: Arc::new(Mutex::new(HashMap::new())),
             client_timeout: Arc::new(Mutex::new(HashMap::new())),
         }
@@ -76,11 +84,27 @@ impl SequenceDetector for PortSequenceDetector {
         let mut client_sequence = self.client_sequences.lock().unwrap();
         let client_sequence = client_sequence.get_mut(client_ip);
         if let Some(sequence) = client_sequence {
-            for rule in &self.sequence_rules {
-                if sequence.ends_with(rule) {
+            for (name, rule) in &self.sequence_rules {
+                if sequence.ends_with(&rule) {
                     println!("Matched knock sequence: {:?} from: {}", rule, client_ip);
                     // clear the sequence
                     sequence.clear();
+
+                    // execute the command
+                    let command = self.rules_map.get(name).unwrap();
+                    let formatted_cmd = command.replace("%IP%", client_ip);
+                    println!("Executing command: {}", formatted_cmd);
+
+                    // format the command with the client ip
+                    match executor::execute_command(&formatted_cmd) {
+                        Ok(_) => {
+                            println!("Command executed successfully");
+                        }
+                        Err(e) => {
+                            println!("Error executing command: {:?}", e);
+                        }
+                    }
+
                     return true;
                 }
             }

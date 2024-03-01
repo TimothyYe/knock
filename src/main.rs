@@ -2,6 +2,7 @@ use sequence::PortSequenceDetector;
 use server::Server;
 
 mod config;
+mod executor;
 mod sequence;
 mod server;
 
