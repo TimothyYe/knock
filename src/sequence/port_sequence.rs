@@ -186,7 +186,7 @@ mod tests {
                 crate::config::config::Rule {
                     name: "disable ssh".to_string(),
                     sequence: vec![3, 5, 6],
-                    command: "du -sh *".to_string(),
+                    command: "free -g".to_string(),
                 },
             ],
         }
