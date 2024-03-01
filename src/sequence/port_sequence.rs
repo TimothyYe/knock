@@ -1,17 +1,21 @@
 use std::collections::{HashMap, HashSet};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::config::Config;
+
 use crate::sequence::SequenceDetector;
 
 #[derive(Debug)]
 pub struct PortSequenceDetector {
-    timeout: i32,
+    timeout: u64,
     sequence_set: HashSet<i32>,
     sequence_rules: Vec<Vec<i32>>,
     client_sequences: HashMap<String, Vec<i32>>,
+    client_timeout: HashMap<String, u64>,
 }
 
 impl PortSequenceDetector {
+    #[must_use]
     pub fn new(config: Config) -> PortSequenceDetector {
         let mut sequence_rules = Vec::new();
         for rule in config.rules.clone() {
@@ -30,6 +34,7 @@ impl PortSequenceDetector {
             sequence_set,
             sequence_rules,
             client_sequences: HashMap::new(),
+            client_timeout: HashMap::new(),
         }
     }
 }
@@ -51,6 +56,15 @@ impl SequenceDetector for PortSequenceDetector {
             .entry(client_ip.clone())
             .or_insert(Vec::new());
         client_sequence.push(sequence);
+
+        // get the current time stamp
+        self.client_timeout.entry(client_ip.clone()).or_insert(
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_secs(),
+        );
+
         self.match_sequence(&client_ip);
     }
 
@@ -64,6 +78,21 @@ impl SequenceDetector for PortSequenceDetector {
                     // clear the sequence
                     sequence.clear();
                     return true;
+                }
+            }
+
+            // check if the sequence has expired
+            let timeout_entry = self.client_timeout.get(client_ip);
+            if let Some(timeout) = timeout_entry {
+                let current_time = SystemTime::now()
+                    .duration_since(UNIX_EPOCH)
+                    .unwrap()
+                    .as_secs();
+
+                if current_time - timeout > self.timeout {
+                    println!("Sequence timeout for: {}", client_ip);
+                    sequence.clear();
+                    self.client_timeout.remove(client_ip);
                 }
             }
         }
@@ -81,12 +110,12 @@ mod tests {
             interface: "enp3s0".to_string(),
             timeout: 5,
             rules: vec![
-                crate::config::Rule {
+                crate::config::config::Rule {
                     name: "enable ssh".to_string(),
                     sequence: vec![1, 2, 3],
                     command: "ls -lh".to_string(),
                 },
-                crate::config::Rule {
+                crate::config::config::Rule {
                     name: "disable ssh".to_string(),
                     sequence: vec![3, 5, 6],
                     command: "du -sh *".to_string(),

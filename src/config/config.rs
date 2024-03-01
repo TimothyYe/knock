@@ -12,6 +12,6 @@ pub struct Rule {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
     pub interface: String,
-    pub timeout: i32,
+    pub timeout: u64,
     pub rules: Vec<Rule>,
 }
