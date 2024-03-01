@@ -99,8 +99,25 @@ impl SequenceDetector for PortSequenceDetector {
         thread::spawn(move || loop {
             thread::sleep(std::time::Duration::from_millis(200));
 
-            let mut client_sequences = client_sequences.lock().unwrap();
-            let mut client_timeout = client_timeout.lock().unwrap();
+            let client_sequences_guard = match client_sequences.lock() {
+                Ok(guard) => guard,
+                Err(poisoned) => {
+                    println!("Error: {:?}", poisoned);
+                    continue;
+                }
+            };
+
+            let client_timeout_guard = match client_timeout.lock() {
+                Ok(guard) => guard,
+                Err(poisoned) => {
+                    println!("Error: {:?}", poisoned);
+                    continue;
+                }
+            };
+
+            let mut client_sequences = client_sequences_guard;
+            let mut client_timeout = client_timeout_guard;
+
             let now = SystemTime::now()
                 .duration_since(UNIX_EPOCH)
                 .unwrap()
