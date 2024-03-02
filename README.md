@@ -1,6 +1,6 @@
 # knock: A port-knocking implementation in Rust
 
-![](https://raw.githubusercontent.com/TimothyYe/knock/master/images/knock.png)
+<img src="https://raw.githubusercontent.com/TimothyYe/knock/master/images/knock.png" width="600">
 
 ## What is port-knocking?
 
