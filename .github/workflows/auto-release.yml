@@ -38,8 +38,9 @@ jobs:
         with:
           # (required) Comma-separated list of binary names (non-extension portion of filename) to build and upload.
           # Note that glob pattern is not supported yet.
-          bin: knock-cli, knockd
+          bin: knock-cli,knockd
           # (optional) Target triple, default is host triple.
           target: ${{ matrix.target }}
+          archive: $bin-$tag-$target
           # (required) GitHub token for uploading assets to GitHub Releases.
           token: ${{ secrets.MY_GITHUB_TOKEN }}
