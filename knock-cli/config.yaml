@@ -1,0 +1,15 @@
+rules:
+  - name: "enable_ssh"
+    host: "example.com"
+    sequence:
+      - 12345
+      - 54321
+      - 32768
+      - 18933
+  - name: "disable_ssh"
+    host: "example.com"
+    sequence:
+      - 18933
+      - 32768
+      - 54321
+      - 12345

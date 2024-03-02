@@ -1,7 +1,7 @@
 interface: "enp3s0"
 timeout: 5
 rules:
-  - name: "Enable SSH"
+  - name: "enable_ssh"
     command: "/usr/sbin/iptables -A INPUT -s %IP% -p tcp --dport 22 -j ACCEPT"
     sequence:
       - 15523
@@ -9,7 +9,7 @@ rules:
       - 32768
       - 28977
       - 51234
-  - name: "Disable SSH"
+  - name: "disable_ssh"
     command: "/usr/sbin/iptables -D INPUT -s %IP% -p tcp --dport 22 -j ACCEPT"
     sequence:
       - 51234

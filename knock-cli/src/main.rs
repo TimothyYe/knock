@@ -1,5 +1,8 @@
 use clap::Parser;
 
+mod config;
+mod rule;
+
 #[derive(Parser, Debug)]
 #[command(version = env!("VERSION"), about, long_about = "A port knocking console application written in Rust")]
 struct Args {
@@ -13,7 +16,6 @@ struct Args {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
-
     let rule = match args.rule {
         Some(rule) => rule,
         None => {
@@ -22,7 +24,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     };
 
-    println!("rule: {}", rule);
+    let config = config::load_config(&args.config)?;
+    let executor = rule::RuleExecutor::new(config);
+    executor.run(&rule)?;
 
     Ok(())
 }
