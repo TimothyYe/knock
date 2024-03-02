@@ -41,6 +41,6 @@ jobs:
           bin: knock-cli,knockd
           # (optional) Target triple, default is host triple.
           target: ${{ matrix.target }}
-          archive: $bin-$tag-$target
+          archive: $tag-$target
           # (required) GitHub token for uploading assets to GitHub Releases.
           token: ${{ secrets.MY_GITHUB_TOKEN }}
