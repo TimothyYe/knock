@@ -8,7 +8,7 @@ mod sequence;
 mod server;
 
 #[derive(Parser, Debug)]
-#[command(version, about, long_about = "A port knocking server written in Rust")]
+#[command(version = env!("VERSION"), about, long_about = "A port knocking server written in Rust")]
 struct Args {
     /// Path to the configuration file
     #[arg(short, long, default_value = "config.yaml")]
