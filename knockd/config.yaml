@@ -1,4 +1,4 @@
-interface: "enp3s0"
+interface: "eth0"
 timeout: 5
 rules:
   - name: "enable_ssh"
