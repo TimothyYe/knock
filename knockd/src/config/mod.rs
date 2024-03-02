@@ -22,7 +22,7 @@ mod tests {
     #[test]
     fn test_load_config() {
         let config = load_config("config.yaml").unwrap();
-        assert_eq!(config.interface, "enp3s0");
+        assert_eq!(config.interface, "eth0");
         assert_eq!(config.rules.len(), 2);
     }
 }
