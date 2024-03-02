@@ -9,6 +9,7 @@ pub struct RuleExecutor {
 }
 
 impl RuleExecutor {
+    #[must_use]
     pub fn new(config: Config) -> RuleExecutor {
         let mut rules = HashMap::new();
         for rule in config.rules {
