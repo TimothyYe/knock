@@ -10,6 +10,8 @@ Port-knocking is a method of externally opening ports on a firewall by generatin
 
 A common use of this technique is to secure connections to an SSH server by only allowing access to the SSH port after a successful port knock.
 
+This project is inspired by another [knock](https://github.com/jvinet/knock) project which is written in C, but it is written in Rust and has a different configuration format.
+
 ## Why use port-knocking?
 
 Port-knocking is a simple and effective way to secure your server from unauthorized access. It is a lightweight and secure method to protect your server from unauthorized access.
