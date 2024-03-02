@@ -157,7 +157,6 @@ impl SequenceDetector for PortSequenceDetector {
                 .collect();
 
             for client_ip in clients_to_remove {
-                println!("Removing client: {} due to timeout...", client_ip);
                 client_sequences.remove(&client_ip);
                 client_timeout.remove(&client_ip);
             }
