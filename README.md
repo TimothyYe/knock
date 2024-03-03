@@ -125,8 +125,6 @@ Assume that you have already added one firewall rule to block all incoming conne
 iptables -A INPUT -p tcp --dport 22 -j DROP
 ```
 
-```bash
-
 Use the following command to enable the SSH port on the server:
 
 ```bash
