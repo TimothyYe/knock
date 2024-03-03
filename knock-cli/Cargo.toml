@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Timothy Ye"]
 homepage = "https://github.com/TimothyYe/knock"
+repository = "https://github.com/TimothyYe/knock"
 description = "A port knocking client"
 license = "Apache-2.0"
 

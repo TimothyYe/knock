@@ -2,6 +2,11 @@
 name = "knockd"
 version = "0.1.0"
 edition = "2021"
+authors = ["Timothy Ye"]
+homepage = "https://github.com/TimothyYe/knock"
+repository = "https://github.com/TimothyYe/knock"
+description = "A port knocking server written in Rust"
+license = "Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
