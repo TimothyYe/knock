@@ -2,13 +2,15 @@
 
 <img src="https://raw.githubusercontent.com/TimothyYe/knock/master/images/knock.png" width="600">
 
+<img src="https://i.imgur.com/AW1Df4X.png" width="600">
+
 ## What is port-knocking?
 
 Port-knocking is a method of externally opening ports on a firewall by generating a connection attempt on a set of prespecified closed ports. Once a correct sequence of connection attempts is received, the firewall rules are dynamically modified to allow the host which sent the connection attempts to connect over specific port(s). 
 
-`knock` only detects the SYN packets and doesn't listen to the opened ports, it uses the [pnet](https://docs.rs/pnet/latest/pnet/) crate to capture the raw packets.
+`knock` __only detects the SYN packets and doesn't listen to the opened ports__, it uses the [pnet](https://docs.rs/pnet/latest/pnet/) crate to capture the raw packets.
 
-A common use of this technique is to secure connections to an SSH server by only allowing access to the SSH port after a successful port knock.
+A common use of this technique is to secure connections to an SSH server by only allowing access to the SSH port after a successful port-knocking sequence has been executed.
 
 This project is inspired by another [knock](https://github.com/jvinet/knock) project which is written in C, but it is written in Rust and has a different configuration format.
 
