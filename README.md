@@ -117,6 +117,13 @@ The default config path is `config.yaml`, you can also specify the config file p
 
 The `-r` option is used to specify the rule name to knock.
 
+## Run Server as docker container
+
+```bash
+docker run --network host --cap-add=NET_RAW --cap-add=NET_BIND_SERVICE --cap-add=NET_ADMIN -d --restart=always --name=knockd -v ./config.yaml:/config.yaml:ro ghcr.io/timothyye/knockd:latest
+```
+Since the server needs to listen to the raw packets, you need to add the `NET_RAW`, `NET_BIND_SERVICE` and `NET_ADMIN` capabilities to the container.
+
 ## Examples
 
 Assume that you have already added one firewall rule to block all incoming connections to the SSH port. E.g.:

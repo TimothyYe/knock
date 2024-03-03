@@ -115,6 +115,14 @@ rules:
 
 `-r` 选项用于指定敲门时运行的规则名称。
 
+## 作为docker容器运行服务端
+
+```bash
+docker run --network host --cap-add=NET_RAW --cap-add=NET_BIND_SERVICE --cap-add=NET_ADMIN -d --restart=always --name=knockd -v ./config.yaml:/config.yaml:ro ghcr.io/timothyye/knockd:latest
+```
+
+由于服务器需要监听原始数据包，因此需要将 `NET_RAW`、`NET_BIND_SERVICE` 和 `NET_ADMIN` 权限添加到容器中。
+
 ## 示例
 
 假设你已经添加了一个防火墙规则来阻止所有对SSH端口的连接。例如：
