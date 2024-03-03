@@ -44,7 +44,7 @@ interface: "eth0"
 timeout: 5
 rules:
   - name: "enable_ssh"
-    command: "/usr/sbin/iptables -A INPUT -s %IP% -p tcp --dport 22 -j ACCEPT"
+    command: "/usr/sbin/iptables -I INPUT -s %IP% -p tcp --dport 22 -j ACCEPT"
     sequence:
       - 15523
       - 17767
@@ -118,6 +118,14 @@ The default config path is `config.yaml`, you can also specify the config file p
 The `-r` option is used to specify the rule name to knock.
 
 ## Examples
+
+Assume that you have already added one firewall rule to block all incoming connections to the SSH port. E.g.:
+
+```bash
+iptables -A INPUT -p tcp --dport 22 -j DROP
+```
+
+```bash
 
 Use the following command to enable the SSH port on the server:
 
