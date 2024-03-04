@@ -1,4 +1,6 @@
 use clap::Parser;
+use log::{error, LevelFilter};
+use pretty_env_logger::env_logger::Builder;
 
 mod config;
 mod rule;
@@ -19,10 +21,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rule = match args.rule {
         Some(rule) => rule,
         None => {
-            println!("No rule specified.");
+            error!("No rule specified.");
             return Ok(());
         }
     };
+
+    Builder::new()
+        .filter_level(LevelFilter::Info) // Set default log level to Info
+        .init();
 
     let config = config::load_config(&args.config)?;
     let executor = rule::RuleExecutor::new(config);
