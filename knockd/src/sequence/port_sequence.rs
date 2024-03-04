@@ -6,6 +6,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use crate::config::Config;
 use crate::executor;
 use crate::sequence::SequenceDetector;
+use log::{error, info};
 
 #[derive(Debug)]
 pub struct PortSequenceDetector {
@@ -55,7 +56,7 @@ impl SequenceDetector for PortSequenceDetector {
             return;
         }
 
-        println!(
+        info!(
             "SYN packet detected from: {} to target port: {}",
             client_ip, sequence
         );
@@ -86,22 +87,22 @@ impl SequenceDetector for PortSequenceDetector {
         if let Some(sequence) = client_sequence {
             for (name, rule) in &self.sequence_rules {
                 if sequence.ends_with(&rule) {
-                    println!("Matched knock sequence: {:?} from: {}", rule, client_ip);
+                    info!("Matched knock sequence: {:?} from: {}", rule, client_ip);
                     // clear the sequence
                     sequence.clear();
 
                     // execute the command
                     let command = self.rules_map.get(name).unwrap();
                     let formatted_cmd = command.replace("%IP%", client_ip);
-                    println!("Executing command: {}", formatted_cmd);
+                    info!("Executing command: {}", formatted_cmd);
 
                     // format the command with the client ip
                     match executor::execute_command(&formatted_cmd) {
                         Ok(_) => {
-                            println!("Command executed successfully");
+                            info!("Command executed successfully");
                         }
                         Err(e) => {
-                            println!("Error executing command: {:?}", e);
+                            error!("Error executing command: {:?}", e);
                         }
                     }
 
@@ -124,7 +125,7 @@ impl SequenceDetector for PortSequenceDetector {
             let client_sequences_guard = match client_sequences.lock() {
                 Ok(guard) => guard,
                 Err(poisoned) => {
-                    println!("Error: {:?}", poisoned);
+                    error!("Error: {:?}", poisoned);
                     continue;
                 }
             };
@@ -132,7 +133,7 @@ impl SequenceDetector for PortSequenceDetector {
             let client_timeout_guard = match client_timeout.lock() {
                 Ok(guard) => guard,
                 Err(poisoned) => {
-                    println!("Error: {:?}", poisoned);
+                    error!("Error: {:?}", poisoned);
                     continue;
                 }
             };
@@ -162,7 +163,7 @@ impl SequenceDetector for PortSequenceDetector {
             }
         });
 
-        println!("Port sequence detector thread started...");
+        info!("Port sequence detector thread started...");
     }
 }
 

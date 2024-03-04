@@ -18,6 +18,11 @@ struct Args {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
+
+    Builder::new()
+        .filter_level(LevelFilter::Info) // Set default log level to Info
+        .init();
+
     let rule = match args.rule {
         Some(rule) => rule,
         None => {
@@ -25,10 +30,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Ok(());
         }
     };
-
-    Builder::new()
-        .filter_level(LevelFilter::Info) // Set default log level to Info
-        .init();
 
     let config = config::load_config(&args.config)?;
     let executor = rule::RuleExecutor::new(config);

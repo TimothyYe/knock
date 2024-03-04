@@ -1,4 +1,6 @@
 use clap::Parser;
+use log::LevelFilter;
+use pretty_env_logger::env_logger::Builder;
 use sequence::PortSequenceDetector;
 use server::Server;
 
@@ -17,6 +19,11 @@ struct Args {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
+
+    // Initialize the logger
+    Builder::new()
+        .filter_level(LevelFilter::Info) // Set default log level to Info
+        .init();
 
     // Load the configuration
     let config = config::load_config(&args.config)?;
