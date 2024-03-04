@@ -1,3 +1,4 @@
+use anyhow::Result;
 use clap::Parser;
 use log::{error, LevelFilter};
 use pretty_env_logger::env_logger::Builder;
@@ -16,7 +17,7 @@ struct Args {
     rule: Option<String>,
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<()> {
     let args = Args::parse();
 
     Builder::new()

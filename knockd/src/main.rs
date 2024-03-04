@@ -1,3 +1,4 @@
+use anyhow::Result;
 use clap::Parser;
 use log::LevelFilter;
 use pretty_env_logger::env_logger::Builder;
@@ -17,7 +18,7 @@ struct Args {
     config: String,
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<()> {
     let args = Args::parse();
 
     // Initialize the logger

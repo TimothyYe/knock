@@ -11,6 +11,7 @@ license = "Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anyhow = "1.0.80"
 clap = { version = "4.5.1", features = ["derive"] }
 log = "0.4.21"
 pnet = "0.34.0"

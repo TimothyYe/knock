@@ -1,13 +1,12 @@
 extern crate pnet;
 
+use crate::sequence::SequenceDetector;
 use pnet::datalink::Channel::Ethernet;
 use pnet::datalink::{self, NetworkInterface};
 use pnet::packet::ethernet::{EtherTypes, EthernetPacket};
 use pnet::packet::ip::IpNextHeaderProtocols;
 use pnet::packet::tcp::TcpPacket;
 use pnet::packet::Packet;
-
-use crate::sequence::SequenceDetector;
 
 pub struct Server {
     interface_name: String,

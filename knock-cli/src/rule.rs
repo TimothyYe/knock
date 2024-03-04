@@ -1,5 +1,6 @@
 use crate::config::Config;
 use crate::config::Rule;
+use anyhow::Result;
 use log::{error, info};
 use std::collections::HashMap;
 use std::net::{SocketAddr, TcpStream, ToSocketAddrs};
@@ -20,7 +21,7 @@ impl RuleExecutor {
         RuleExecutor { rules }
     }
 
-    pub fn run(&self, name: &str) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn run(&self, name: &str) -> Result<()> {
         if let Some(rule) = self.rules.get(name) {
             info!("Executing rule: {}", rule.name);
             // Iterate over the ports and attempt to connect to each

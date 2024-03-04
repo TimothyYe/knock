@@ -1,6 +1,7 @@
+use anyhow::Result;
 use std::process::Command;
 
-pub fn execute_command(command: &str) -> Result<(), Box<dyn std::error::Error>> {
+pub fn execute_command(command: &str) -> Result<()> {
     let mut parts = command.split_whitespace();
     let command = parts.next().unwrap();
     let args = parts;
