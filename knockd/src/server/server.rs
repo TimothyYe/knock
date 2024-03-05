@@ -1,5 +1,3 @@
-extern crate pnet;
-
 use crate::sequence::SequenceDetector;
 use pnet::datalink::Channel::Ethernet;
 use pnet::datalink::{self, NetworkInterface};
