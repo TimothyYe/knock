@@ -29,9 +29,9 @@ fn main() -> Result<()> {
     // Load the configuration
     let config = config::load_config(&args.config)?;
     // Create the sequence detector
-    let detector = PortSequenceDetector::new(config);
+    let detector = PortSequenceDetector::new(config.clone());
 
-    let mut server = Server::new("enp3s0".to_string(), Box::new(detector));
+    let mut server = Server::new(config.interface, Box::new(detector));
     server.start();
 
     Ok(())

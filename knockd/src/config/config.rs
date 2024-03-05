@@ -7,7 +7,7 @@ pub struct Rule {
     pub command: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Config {
     pub interface: String,
     pub timeout: u64,
